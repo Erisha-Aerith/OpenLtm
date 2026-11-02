@@ -65,6 +65,11 @@ USER_RULES: tuple[CaptureRule, ...] = (
             "wrong", "incorrect", "no,", "no.", "don't", "dont", "stop",
             "fix", "error", "mistake", "that's not", "thats not", "not right",
             "bad idea", "revert", "undo",
+            # Deutsch (Ergänzung Aerith/Aerith-OS, 2026-11-02): Delias Arbeitssprache
+            # ist Deutsch; ohne diese Auslöser erfasst das Plugin aus ihren Sitzungen nichts.
+            "falsch", "stimmt nicht", "nein,", "nein.", "nicht richtig",
+            "korrigier", "korrektur", "rückgängig", "rueckgaengig", "irrtum",
+            "das war nicht", "hab ich nicht gesagt",
         ),
         category="gotcha",
         importance=4,
@@ -75,6 +80,13 @@ USER_RULES: tuple[CaptureRule, ...] = (
         keywords=(
             "never", "always", "must", "don't ever", "do not", "should not",
             "can't", "cannot", "only if", "required", "make sure",
+            # Deutsch
+            "niemals", "nie ", "immer ", "muss ", "muß ", "darf nicht",
+            "unbedingt", "stell sicher", "achte darauf", "pflicht",
+            "nur wenn", "niemals nicht",
+            # Ausdrückliche Merk-Anweisung — wer "merk dir" sagt, will es behalten
+            "merk dir", "merke dir", "merken:", "notier dir", "notiere",
+            "schreib dir", "behalte",
         ),
         category="constraint",
         importance=4,
@@ -86,6 +98,9 @@ USER_RULES: tuple[CaptureRule, ...] = (
             "prefer", "like", "want", "use ", "always use", "i need",
             "i'd rather", "id rather", "favorite", "favourite", "wish",
             "hope", "expect", "let's stick with", "stick to",
+            # Deutsch
+            "bevorzuge", "lieber ", "ich will ", "ich brauche", "wir wollen",
+            "gefällt mir", "gefällt nicht", "wunsch", "am liebsten",
         ),
         category="preference",
         importance=3,
@@ -96,6 +111,9 @@ USER_RULES: tuple[CaptureRule, ...] = (
         keywords=(
             "let's", "lets ", "we'll", "well ", "going with", "decided",
             "choose", "use this", "settled on", "picked", "agreed", "we chose",
+            # Deutsch
+            "lass uns", "wir nehmen", "entschieden", "beschlossen",
+            "geeinigt", "nehmen wir", "entscheide dich", "festgelegt",
         ),
         category="architecture",
         importance=3,
@@ -111,6 +129,10 @@ ASSISTANT_RULES: tuple[CaptureRule, ...] = (
             "is configured as", "is set to", "the error was",
             "the issue is", "root cause", "solution is", "works by",
             "note that", "remember that", "key insight",
+            # Deutsch
+            "stellt sich heraus", "der fehler war", "die ursache ist",
+            "die lösung ist", "die loesung ist", "funktioniert so",
+            "das problem ist", "gezeigt hat", "gefunden:",
         ),
         category="gotcha",
         importance=3,
@@ -243,6 +265,10 @@ SPEECH_MARKERS: tuple[str, ...] = (
     "the solution is ", "the issue is ", "root cause ",
     "i found that ", "i discovered ", "turns out ", "note that ",
     "remember that ", "key insight ",
+    # Deutsch: Anrede- und Merkfloskeln, damit der gespeicherte Satz allein lesbar ist
+    "merk dir ", "merk dir: ", "merke dir ", "merke: ", "behalte ",
+    "wichtig: ", "beachte: ", "notier dir ", "notiere: ",
+    "wir haben entschieden, ", "wir nehmen ", "lass uns ",
 )
 
 MAX_FACT_LEN = 500

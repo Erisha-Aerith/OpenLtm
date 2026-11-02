@@ -283,5 +283,44 @@ class EvaluateSessionTests(unittest.TestCase):
         self.assertEqual([d.rule for d in decisions], ["constraint"])
 
 
+class GermanCaptureTests(unittest.TestCase):
+    """German triggers — the rule set was English-only, which silently disabled
+    capture for any conversation held in German."""
+
+    def test_correction_in_german(self):
+        d = ac.evaluate_turn("Das war falsch, das Board laeuft auf 6423.", "Verstanden.")
+        self.assertEqual((d.rule, d.category), ("correction", "gotcha"))
+
+    def test_constraint_in_german(self):
+        d = ac.evaluate_turn("Wir nehmen nie npm, immer Bun.", "Ok.")
+        self.assertEqual((d.rule, d.category), ("constraint", "constraint"))
+
+    def test_preference_in_german(self):
+        d = ac.evaluate_turn("Ich will die Antworten auf Deutsch.", "Ok.")
+        self.assertEqual((d.rule, d.category), ("preference", "preference"))
+
+    def test_decision_in_german(self):
+        d = ac.evaluate_turn("Wir haben entschieden, dass eine Datei fuer alle Profile gilt.", "Ok.")
+        self.assertEqual(d.rule, "decision")
+
+    def test_explicit_remember_request_is_captured(self):
+        # "merk dir" is an explicit instruction to keep something, so it must
+        # not depend on any other keyword being present.
+        d = ac.evaluate_turn("Merk dir: Port 6423 ist das Board.", "Ok.")
+        self.assertEqual((d.rule, d.category), ("constraint", "constraint"))
+
+    def test_german_marker_is_stripped_from_the_fact(self):
+        d = ac.evaluate_turn("Merk dir immer: Port 6423 ist das Board.", "Ok.")
+        self.assertNotIn("merk dir", d.content.lower())
+        self.assertIn("6423", d.content)
+
+    def test_plain_statement_is_not_captured(self):
+        self.assertIsNone(ac.evaluate_turn("Das Board laeuft auf Port 6423.", "Ok."))
+
+    def test_english_still_works(self):
+        d = ac.evaluate_turn("Always use Bun, never npm in this project.", "Understood.")
+        self.assertEqual(d.rule, "constraint")
+
+
 if __name__ == "__main__":
     unittest.main()
